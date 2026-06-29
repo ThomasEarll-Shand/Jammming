@@ -9,7 +9,7 @@
   margin-bottom: 15px;
 }
 
-.spotify-btn {
+.spotify-button {
   display: block;
   margin: 20px auto;
   background: #8d3cff;
@@ -21,6 +21,6 @@
   transition: .3s;
 }
 
-.spotify-btn:hover {
+.spotify-button:hover {
   background: #a85cff;
 }

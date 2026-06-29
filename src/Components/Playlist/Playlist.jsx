@@ -6,7 +6,7 @@ function Playlist() {
     <section className="playlist">
       <h2>New Playlist</h2>
 
-      <button className="spotify-btn">
+      <button className="spotify-button">
         SAVE TO SPOTIFY
       </button>
 

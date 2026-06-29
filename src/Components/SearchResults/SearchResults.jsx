@@ -1,12 +1,12 @@
 import "./SearchResults.css";
 import Tracklist from "../Tracklist/Tracklist";
 
-function SearchResults() {
+function SearchResults({ searchResults }) {
   return (
     <section className="results">
       <h2>Results</h2>
 
-      <Tracklist />
+      <Tracklist tracks={searchResults} />
     </section>
   );
 }

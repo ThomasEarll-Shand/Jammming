@@ -15,7 +15,7 @@
   margin-top: 4px;
 }
 
-.track-btn {
+.track-button {
   background: none;
   border: none;
   color: white;
@@ -23,6 +23,6 @@
   cursor: pointer;
 }
 
-.track-btn:hover {
+.track-button:hover {
   color: #8d3cff;
 }
