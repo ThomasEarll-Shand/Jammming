@@ -1,0 +1,26 @@
+.playlist {
+  background: rgba(15, 12, 70, 0.9);
+  width: 400px;
+  min-height: 600px;
+  padding: 20px;
+}
+
+.playlist h2 {
+  margin-bottom: 15px;
+}
+
+.spotify-btn {
+  display: block;
+  margin: 20px auto;
+  background: #8d3cff;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.spotify-btn:hover {
+  background: #a85cff;
+}

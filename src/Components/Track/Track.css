@@ -1,0 +1,28 @@
+.track {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,.3);
+  padding: 16px 0;
+}
+
+.track h3 {
+  font-size: 1rem;
+}
+
+.track p {
+  color: #bbb;
+  margin-top: 4px;
+}
+
+.track-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.track-btn:hover {
+  color: #8d3cff;
+}

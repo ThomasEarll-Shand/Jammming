@@ -1,0 +1,10 @@
+.results {
+  background: rgba(15, 12, 70, 0.9);
+  width: 500px;
+  min-height: 600px;
+  padding: 20px;
+}
+
+.results h2 {
+  margin-bottom: 20px;
+}
