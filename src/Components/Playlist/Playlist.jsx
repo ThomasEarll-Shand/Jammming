@@ -1,10 +1,21 @@
 import "./Playlist.css";
 import Tracklist from "../Tracklist/Tracklist";
 
-function Playlist({ playlistName, playlistTracks, onRemoveTrack }) {
+function Playlist({ playlistName, playlistTracks, onRemoveTrack, onUpdatePlaylistName }) {
+
+  function handleNameChange(event) {
+    onUpdatePlaylistName(event.target.value);
+  }
+  
   return (
     <section className="playlist">
-      <h2>{playlistName}</h2>
+      <h2>
+        <input
+          type="text"
+          value={playlistName}
+          onChange={handleNameChange}
+        />
+      </h2>
 
       <button className="spotify-button">SAVE TO SPOTIFY</button>
 

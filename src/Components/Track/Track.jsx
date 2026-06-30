@@ -1,6 +1,6 @@
 import "./Track.css";
 
-function Track({ track = [] , onAddTrack, onRemoveTrack }) {
+function Track({ track = {}, onAddTrack, onRemoveTrack }) {
 
   function handleAddTrack() {
     onAddTrack(track);
@@ -17,12 +17,17 @@ function Track({ track = [] , onAddTrack, onRemoveTrack }) {
         <p>{track.artist} | {track.album}</p>
       </div>
 
-      <button className="track-button" onClick={handleAddTrack}>
-        +
-      </button>
-      <button className="track-button" onClick={handleRemoveTrack}>
-        -
-      </button>
+      {onAddTrack && (
+        <button className="track-button" onClick={handleAddTrack}>
+          +
+        </button>
+      )}
+
+      {onRemoveTrack && (
+        <button className="track-button" onClick={handleRemoveTrack}>
+          -
+        </button>
+      )}
     </div>
   );
 }

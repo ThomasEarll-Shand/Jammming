@@ -4,8 +4,6 @@ import SearchResults from "./Components/SearchResults/SearchResults";
 import Playlist from "./Components/Playlist/Playlist";
 import { useState } from "react";
 
-const playlistName = "My Playlist";
-
 const searchResults = [
   {
     id: 1,
@@ -28,6 +26,7 @@ const searchResults = [
 ];
 
 function App() {
+  const [playlistName, setPlaylistName] = useState("New Playlist");
   const [playlistTracks, setPlaylistTracks] = useState([]);
 
   function addTrack(track) {
@@ -41,6 +40,10 @@ function App() {
   function removeTrack(track) {
     const updatedTracks = playlistTracks.filter((playlistTrack) => playlistTrack.id !== track.id);
     setPlaylistTracks(updatedTracks);
+  }
+
+  function updatePlaylistName(newName) {
+    setPlaylistName(newName);
   }
 
   return (
@@ -60,6 +63,7 @@ function App() {
             playlistName={playlistName}
             playlistTracks={playlistTracks}
             onRemoveTrack={removeTrack}
+            onUpdatePlaylistName={updatePlaylistName}
           />
         </div>
       </main>
