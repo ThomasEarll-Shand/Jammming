@@ -1,9 +1,13 @@
 import "./Track.css";
 
-function Track({ track = [] , onAddTrack }) {
+function Track({ track = [] , onAddTrack, onRemoveTrack }) {
 
   function handleAddTrack() {
     onAddTrack(track);
+  }
+
+  function handleRemoveTrack() {
+    onRemoveTrack(track);
   }
 
   return (
@@ -15,6 +19,9 @@ function Track({ track = [] , onAddTrack }) {
 
       <button className="track-button" onClick={handleAddTrack}>
         +
+      </button>
+      <button className="track-button" onClick={handleRemoveTrack}>
+        -
       </button>
     </div>
   );
