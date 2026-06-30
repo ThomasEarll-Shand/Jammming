@@ -1,6 +1,11 @@
 import "./Track.css";
 
-function Track({ track }) {
+function Track({ track = [] , onAddTrack }) {
+
+  function handleAddTrack() {
+    onAddTrack(track);
+  }
+
   return (
     <div className="track">
       <div>
@@ -8,7 +13,9 @@ function Track({ track }) {
         <p>{track.artist} | {track.album}</p>
       </div>
 
-      <button className="track-button">+</button>
+      <button className="track-button" onClick={handleAddTrack}>
+        +
+      </button>
     </div>
   );
 }

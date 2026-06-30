@@ -2,23 +2,9 @@ import "./App.css";
 import SearchBar from "./Components/SearchBar/SearchBar";
 import SearchResults from "./Components/SearchResults/SearchResults";
 import Playlist from "./Components/Playlist/Playlist";
+import { useState } from "react";
 
 const playlistName = "My Playlist";
-
-const playlistTracks = [
-  {
-    id: 1,
-    name: "Song 1",
-    artist: "Artist 1",
-    album: "Album 1"
-  },
-  {
-    id: 2,
-    name: "Song 2",
-    artist: "Artist 2",
-    album: "Album 2"
-  },
-];
 
 const searchResults = [
   {
@@ -42,6 +28,16 @@ const searchResults = [
 ];
 
 function App() {
+  const [playlistTracks, setPlaylistTracks] = useState([]);
+
+  function addTrack(track) {
+    const trackExists = playlistTracks.some((playlistTrack) => playlistTrack.id === track.id);
+
+    if (!trackExists) {
+      setPlaylistTracks([...playlistTracks, track]);
+    }
+  }
+
   return (
     <div className="app">
       <header>
@@ -54,7 +50,7 @@ function App() {
         <SearchBar />
 
         <div className="playlist-container">
-          <SearchResults searchResults={searchResults} />
+          <SearchResults searchResults={searchResults} onAddTrack={addTrack} />
           <Playlist playlistName={playlistName} playlistTracks={playlistTracks} />
         </div>
       </main>
