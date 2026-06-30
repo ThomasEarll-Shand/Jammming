@@ -1,16 +1,14 @@
 import "./Playlist.css";
 import Tracklist from "../Tracklist/Tracklist";
 
-function Playlist() {
+function Playlist({ playlistName, playlistTracks }) {
   return (
     <section className="playlist">
-      <h2>New Playlist</h2>
+      <h2>{playlistName}</h2>
 
-      <button className="spotify-button">
-        SAVE TO SPOTIFY
-      </button>
+      <button className="spotify-button">SAVE TO SPOTIFY</button>
 
-      <Tracklist />
+      <Tracklist tracks={playlistTracks} />
     </section>
   );
 }

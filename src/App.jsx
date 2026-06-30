@@ -3,6 +3,23 @@ import SearchBar from "./Components/SearchBar/SearchBar";
 import SearchResults from "./Components/SearchResults/SearchResults";
 import Playlist from "./Components/Playlist/Playlist";
 
+const playlistName = "My Playlist";
+
+const playlistTracks = [
+  {
+    id: 1,
+    name: "Song 1",
+    artist: "Artist 1",
+    album: "Album 1"
+  },
+  {
+    id: 2,
+    name: "Song 2",
+    artist: "Artist 2",
+    album: "Album 2"
+  },
+];
+
 const searchResults = [
   {
     id: 1,
@@ -38,7 +55,7 @@ function App() {
 
         <div className="playlist-container">
           <SearchResults searchResults={searchResults} />
-          <Playlist />
+          <Playlist playlistName={playlistName} playlistTracks={playlistTracks} />
         </div>
       </main>
     </div>
