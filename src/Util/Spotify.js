@@ -1,62 +1,121 @@
 const clientId = "8d1687fa7e0449769c01a81da0ddae0f";
-const redirectUri = "http://localhost:5173/";
+const redirectUri = "http://127.0.0.1:5173/";
 
 let accessToken;
 
+const generateRandomString = (length) => {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters[randomIndex];
+  }
+
+  return result;
+};
+
+const generateCodeVerifier = () => {
+  const codeVerifier = generateRandomString(128);
+  localStorage.setItem("code_verifier", codeVerifier);
+  return codeVerifier;
+};
+
+const generateCodeChallenge = async (codeVerifier) => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(codeVerifier);
+  const hashBuffer = await window.crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const base64String = btoa(String.fromCharCode(...hashArray));
+
+  return base64String
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+};
+
 const Spotify = {
-  getAccessToken() {
+  async getAccessToken() {
     if (accessToken) {
       return accessToken;
     }
 
-    const tokenMatch = window.location.href.match(/access_token=([^&]*)/);
-    const expiresInMatch = window.location.href.match(/expires_in=([^&]*)/);
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
 
-    if (tokenMatch && expiresInMatch) {
-      accessToken = tokenMatch[1];
-      const expiresIn = Number(expiresInMatch[1]);
+    if (code) {
+      const codeVerifier = localStorage.getItem("code_verifier");
 
-      window.setTimeout(() => (accessToken = ""), expiresIn * 1000);
-      window.history.pushState("Access Token", null, "/");
+      const tokenResponse = await fetch(
+        "https://accounts.spotify.com/api/token",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({
+            client_id: clientId,
+            grant_type: "authorization_code",
+            code,
+            redirect_uri: redirectUri,
+            code_verifier: codeVerifier,
+          }),
+        }
+      );
 
-    return accessToken;
-  }
+      const data = await tokenResponse.json();
+      accessToken = data.access_token;
 
-  const accessUrl = 
-  `https://accounts.spotify.com/authorize?client_id=${clientId}` +
-  `&response_type=token` +
-  `&scope=playlist-modify-public` +
-  `&redirect_uri=${redirectUri}`;
+      window.history.pushState({}, null, "/");
 
-  window.location = accessUrl;
-  }
-},
+      return accessToken;
+    }
 
-async search(term) {
-    const accessToken = Spotify.getAccessToken();
-    
-    const response = await fetch(
-      `https://api.spotify.com/v1/search?type=track&q=${encodeURIComponent(term)}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+    const codeVerifier = generateCodeVerifier();
+    const codeChallenge = await generateCodeChallenge(codeVerifier);
+
+    const authUrl = new URL("https://accounts.spotify.com/authorize");
+    authUrl.searchParams.append("client_id", clientId);
+    authUrl.searchParams.append("response_type", "code");
+    authUrl.searchParams.append("redirect_uri", redirectUri);
+    authUrl.searchParams.append("code_challenge_method", "S256");
+    authUrl.searchParams.append("code_challenge", codeChallenge);
+    authUrl.searchParams.append(
+      "scope",
+      "playlist-modify-public playlist-modify-private"
     );
 
-    const jsonResponse = await response.json();
+    window.location.href = authUrl.toString();
+  },
 
-    if (!jsonResponse.tracks) {
+  async search(term) {
+    const accessToken = await this.getAccessToken();
+
+    const searchUrl = `https://api.spotify.com/v1/search?type=track&q=${encodeURIComponent(
+      term
+    )}`;
+
+    const response = await fetch(searchUrl, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!data.tracks) {
       return [];
     }
 
-    return jsonResponse.tracks.items.map((track) => ({
-        id: track.id,
-        name: track.name,
-        artist: track.artists[0].name,
-        album: track.album.name,
-        uri: track.uri,
+    return data.tracks.items.map((track) => ({
+      id: track.id,
+      name: track.name,
+      artist: track.artists[0].name,
+      album: track.album.name,
+      uri: track.uri,
     }));
-  }
+  },
+};
 
-  export default Spotify;
+export default Spotify;

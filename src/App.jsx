@@ -3,29 +3,10 @@ import SearchBar from "./Components/SearchBar/SearchBar";
 import SearchResults from "./Components/SearchResults/SearchResults";
 import Playlist from "./Components/Playlist/Playlist";
 import { useState } from "react";
-
-const searchResults = [
-  {
-    id: 1,
-    name: "Song 1",
-    artist: "Artist 1",
-    album: "Album 1"
-  },
-  {
-    id: 2,
-    name: "Song 2",
-    artist: "Artist 2",
-    album: "Album 2"
-  },
-  {
-    id: 3,
-    name: "Song 3",
-    artist: "Artist 3",
-    album: "Album 3"
-  }
-];
+import Spotify from "./Util/Spotify";
 
 function App() {
+  const [searchResults, setSearchResults] = useState([]);
   const [playlistName, setPlaylistName] = useState("New Playlist");
   const [playlistTracks, setPlaylistTracks] = useState([]);
 
@@ -46,6 +27,11 @@ function App() {
     setPlaylistName(newName);
   }
 
+  async function search(term) {
+    const results = await Spotify.search(term);
+    setSearchResults(results);
+  }
+
   return (
     <div className="app">
       <header>
@@ -55,7 +41,7 @@ function App() {
       </header>
 
       <main>
-        <SearchBar />
+        <SearchBar onSearch={search} />
 
         <div className="playlist-container">
           <SearchResults searchResults={searchResults} onAddTrack={addTrack} />
