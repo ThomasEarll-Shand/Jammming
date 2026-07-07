@@ -50,7 +50,7 @@ function App() {
     <div className="app">
       <header>
         <h1>
-          Jam<span>m</span>ming
+          Ja<span>mmm</span>ing
         </h1>
       </header>
 
