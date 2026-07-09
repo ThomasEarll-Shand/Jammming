@@ -69,9 +69,6 @@ const Spotify = {
       );
 
       const data = await tokenResponse.json();
-
-console.log("=== TOKEN RESPONSE ===");
-console.log(data);
       accessToken = data.access_token;
 
       window.history.pushState({}, null, "/");
@@ -131,18 +128,9 @@ console.log(data);
     return;
   }
 
-  const accessToken = await this.getAccessToken();
+ const accessToken = await this.getAccessToken();
 
-  const userResponse = await fetch("https://api.spotify.com/v1/me", {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  const userData = await userResponse.json();
-    const userId = userData.id;
-
-  const playlistResponse = await fetch("https://api.spotify.com/v1/me/playlists", {
+const playlistResponse = await fetch("https://api.spotify.com/v1/me/playlists", {
   method: "POST",
   headers: {
     Authorization: `Bearer ${accessToken}`,
@@ -155,11 +143,9 @@ console.log(data);
   }),
 });
 
+
 const playlistData = await playlistResponse.json();
 const playlistId = playlistData.id;
-
-console.log("Created playlist:", playlistId, playlistData);
-console.log("Track URIs being sent:", trackUris);
 
 const tracksResponse = await fetch(
   `https://api.spotify.com/v1/playlists/${playlistId}/items`,
@@ -176,9 +162,6 @@ const tracksResponse = await fetch(
 );
 
 const tracksData = await tracksResponse.json();
-
-console.log("Add tracks status:", tracksResponse.status);
-console.log("Add tracks data:", tracksData);
 
 if (!tracksResponse.ok) {
   throw new Error(`Failed to add tracks: ${tracksData.error?.message}`);
