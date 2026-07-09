@@ -32,6 +32,18 @@ function App() {
     setSearchResults(results);
   }
 
+  async function savePlaylist() {
+  const trackUris = playlistTracks.map((track) => track.uri);
+
+  try {
+    await Spotify.savePlaylist(playlistName, trackUris);
+    setPlaylistName("New Playlist");
+    setPlaylistTracks([]);
+  } catch (error) {
+    console.error("Save playlist failed:", error);
+  }
+}
+
   return (
     <div className="app">
       <header>
@@ -50,6 +62,7 @@ function App() {
             playlistTracks={playlistTracks}
             onRemoveTrack={removeTrack}
             onUpdatePlaylistName={updatePlaylistName}
+            onSavePlaylist={savePlaylist}
           />
         </div>
       </main>

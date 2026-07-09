@@ -1,6 +1,10 @@
 const clientId = "8d1687fa7e0449769c01a81da0ddae0f";
 const redirectUri = "http://127.0.0.1:5173/";
 
+/* 
+npm run dev -- --host 127.0.0.1 
+Type this to run the server on localhost */
+
 let accessToken;
 
 const generateRandomString = (length) => {
@@ -65,6 +69,9 @@ const Spotify = {
       );
 
       const data = await tokenResponse.json();
+
+console.log("=== TOKEN RESPONSE ===");
+console.log(data);
       accessToken = data.access_token;
 
       window.history.pushState({}, null, "/");
@@ -85,6 +92,7 @@ const Spotify = {
       "scope",
       "playlist-modify-public playlist-modify-private"
     );
+    authUrl.searchParams.append("show_dialog", "true");
 
     window.location.href = authUrl.toString();
   },
@@ -104,6 +112,7 @@ const Spotify = {
 
     const data = await response.json();
 
+
     if (!data.tracks) {
       return [];
     }
@@ -116,6 +125,66 @@ const Spotify = {
       uri: track.uri,
     }));
   },
+
+    async savePlaylist(name, trackUris) {
+  if (!name || !trackUris.length) {
+    return;
+  }
+
+  const accessToken = await this.getAccessToken();
+
+  const userResponse = await fetch("https://api.spotify.com/v1/me", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  const userData = await userResponse.json();
+    const userId = userData.id;
+
+  const playlistResponse = await fetch("https://api.spotify.com/v1/me/playlists", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    name,
+    description: "Created with Jammming",
+    public: true,
+  }),
+});
+
+const playlistData = await playlistResponse.json();
+const playlistId = playlistData.id;
+
+console.log("Created playlist:", playlistId, playlistData);
+console.log("Track URIs being sent:", trackUris);
+
+const tracksResponse = await fetch(
+  `https://api.spotify.com/v1/playlists/${playlistId}/items`,
+  {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      uris: trackUris,
+    }),
+  }
+);
+
+const tracksData = await tracksResponse.json();
+
+console.log("Add tracks status:", tracksResponse.status);
+console.log("Add tracks data:", tracksData);
+
+if (!tracksResponse.ok) {
+  throw new Error(`Failed to add tracks: ${tracksData.error?.message}`);
+}
+  return playlistData;
+}
 };
 
 export default Spotify;
